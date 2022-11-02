@@ -25,6 +25,16 @@ const (
 	connStateClosed
 )
 
+func isClosed[T any](ch <-chan T) bool {
+	select {
+	case <-ch:
+		return true
+	default:
+	}
+
+	return false
+}
+
 type serverConn struct {
 	c net.Conn
 	h fasthttp.RequestHandler
@@ -165,7 +175,9 @@ func (sc *serverConn) handlePing(ping *Ping) {
 	ping.SetAck(true)
 	fr.SetBody(ping)
 
-	sc.writer <- fr
+	if !isClosed(sc.writer) {
+		sc.writer <- fr
+	}
 }
 
 func (sc *serverConn) writePing() {
@@ -176,7 +188,9 @@ func (sc *serverConn) writePing() {
 
 	fr.SetBody(ping)
 
-	sc.writer <- fr
+	if sc.state == connStateOpen {
+		sc.writer <- fr
+	}
 }
 
 func (sc *serverConn) checkFrameWithStream(fr *FrameHeader) error {
