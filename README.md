@@ -1,11 +1,13 @@
 # HTTP2
-
 http2 is an implementation of HTTP/2 protocol for [fasthttp](https://github.com/valyala/fasthttp).
+
+This repository is an attempt to fix some of the shortcomings we personally encountered whilst using the library as the parent repository seems to be abandoned.
+No support is provided when using this library, whilst we are using it internally, there are no guarantees that this will work perfectly with your implementation.
 
 ## Download
 
 ```bash
-go get github.com/dgrr/http2@v0.3.5
+go get github.com/diamondcdn/fasthttp-http2
 ```
 
 ## Help
