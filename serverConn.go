@@ -188,7 +188,7 @@ func (sc *serverConn) writePing() {
 
 	fr.SetBody(ping)
 
-	if sc.state == connStateOpen {
+	if !isClosed(sc.writer) {
 		sc.writer <- fr
 	}
 }
@@ -533,7 +533,9 @@ func (sc *serverConn) writeReset(strm uint32, code ErrorCode) {
 
 	r.SetCode(code)
 
-	sc.writer <- fr
+	if !isClosed(sc.writer) {
+		sc.writer <- fr
+	}
 
 	if sc.debug {
 		sc.logger.Printf(
@@ -554,7 +556,9 @@ func (sc *serverConn) writeGoAway(strm uint32, code ErrorCode, message string) {
 
 	fr.SetBody(ga)
 
-	sc.writer <- fr
+	if !isClosed(sc.writer) {
+		sc.writer <- fr
+	}
 
 	if strm != 0 {
 		atomic.StoreUint32(&sc.closeRef, sc.lastID)
@@ -828,7 +832,9 @@ func (sc *serverConn) handleEndRequest(strm *Stream) {
 
 	fasthttpResponseHeaders(h, &sc.enc, &ctx.Response)
 
-	sc.writer <- fr
+	if !isClosed(sc.writer) {
+		sc.writer <- fr
+	}
 
 	if hasBody {
 		if ctx.Response.IsBodyStream() {
@@ -983,7 +989,9 @@ func (sc *serverConn) writeData(strm *Stream, body []byte) {
 
 		fr.SetBody(data)
 
-		sc.writer <- fr
+		if !isClosed(sc.writer) {
+			sc.writer <- fr
+		}
 	}
 }
 
@@ -1033,7 +1041,9 @@ func (sc *serverConn) handleSettings(st *Settings) {
 
 	fr.SetBody(stRes)
 
-	sc.writer <- fr
+	if !isClosed(sc.writer) {
+		sc.writer <- fr
+	}
 }
 
 func fasthttpResponseHeaders(dst *Headers, hp *HPACK, res *fasthttp.Response) {
