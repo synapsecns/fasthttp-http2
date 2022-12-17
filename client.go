@@ -54,6 +54,10 @@ type Ctx struct {
 
 // resolve will resolve the context, meaning that provided an error,
 func (ctx *Ctx) resolve(err error) {
+	// Fixes race condition writing on closed channel
+	defer func() {
+		recover()
+	}()
 	select {
 	case ctx.Err <- err:
 	default:
