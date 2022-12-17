@@ -1,4 +1,4 @@
-module github.com/diamondcdn/fasthttp-http2
+module github.com/synapsecns/fasthttp-http2
 
 go 1.19
 

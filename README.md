@@ -7,7 +7,7 @@ No support is provided when using this library, whilst we are using it internall
 ## Download
 
 ```bash
-go get github.com/diamondcdn/fasthttp-http2
+go get github.com/synapsecns/fasthttp-http2
 ```
 
 ## Help
